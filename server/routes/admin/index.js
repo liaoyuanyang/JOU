@@ -23,13 +23,13 @@ module.exports = app => {
         })
     })
 
-    // 获取分类
+    // 查找所有分类
     router.get('/categories', async(req, res) => {
-        const model = await Category.find().limit(50)
+        const model = await Category.find().populate('parent').limit(50)
         res.send(model)
     })
 
-    // 获取分类详情
+    // 根据id查找分类
     router.get('/categories/:id', async(req, res) => {
         const model = await Category.findById(req.params.id)
         res.send(model)
