@@ -6,6 +6,10 @@ const express = require('express')
 const path = require('path')
 const app = express() // 创建一个网站服务器
 
+// 在app实例上添加一个属性，该属性的token生成时需要用到的一个密钥
+// 这个值最好添加到环境变量，而不是放到源代码中
+app.set('serect', 'liaoyuanayng')
+
 app.use(require('cors')()) // 允许跨域请求
 app.use(express.json()) // 允许处理post请求
 
