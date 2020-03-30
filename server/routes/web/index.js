@@ -5,9 +5,16 @@ module.exports = app => {
     const router = express.Router() // 创建express的子路由
     const jwt = require('jsonwebtoken') // 加密生成token的模块
     const assert = require('http-assert') // 判断状态的模块
+    const User = require('../../models/User')
+    const authMiddleware = require('../../middleware/auth') // 登录校验中间件
+    const resourceMiddleware = require('../../middleware/resource') // 获取模型中间件
 
     // 添加资源
-    router.post('/', async(req, res) => {
+    router.post('/', authMiddleware(), async(req, res) => {
+        if (req.Model.modelName === 'Good') {
+            req.body.userId = req.user._id
+                // console.log(req.body)
+        }
         const model = await req.Model.create(req.body)
         res.send(model)
     })
@@ -29,9 +36,11 @@ module.exports = app => {
     // 查找所有资源
     router.get('/', async(req, res) => {
         const queryOptions = {}
-            // console.log(req.Model)
         if (req.Model.modelName === 'Category') {
             queryOptions.populate = 'parent'
+        }
+        if (req.Model.modelName === 'Good') {
+            queryOptions.populate = 'userId'
         }
         const model = await req.Model.find().setOptions(queryOptions)
         res.send(model)
@@ -42,13 +51,6 @@ module.exports = app => {
         const model = await req.Model.findById(req.params.id)
         res.send(model)
     })
-
-    // 引入登录校验中间件
-    const authMiddleware = require('../../middleware/auth')
-
-    // 引入获取模型中间件
-    const resourceMiddleware = require('../../middleware/resource')
-
 
     /**
      * 通用CRUD处理
@@ -70,6 +72,16 @@ module.exports = app => {
         res.send(file)
     })
 
+    /**
+     * 用户注册的接口
+     */
+    app.post('/web/api/register', async(req, res) => {
+        const { username } = req.body
+        const user1 = await User.findOne({ username })
+        assert(!user1, 422, '该用户名已被注册！')
+        const user = User.create(req.body)
+        res.send(user)
+    })
 
     /**
      * 用户登录的接口
@@ -78,13 +90,12 @@ module.exports = app => {
         const { username, password } = req.body
 
         // 1.根据用户名找到用户
-        const User = require('../../models/User')
         const user = await User.findOne({ username }).select('+password')
-        assert(user, 422, '用户名不存在')
+        assert(user, 422, '用户名不存在！')
 
         // 2.校验密码
         const isValid = require('bcrypt').compareSync(password, user.password)
-        assert(isValid, 422, '密码错误')
+        assert(isValid, 422, '密码错误！')
 
         // 3.返回token
         const token = jwt.sign({ id: user._id }, app.get('serect'))

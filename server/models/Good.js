@@ -11,7 +11,7 @@ const schema = new mongoose.Schema({
     // 物品描述
     description: { type: String },
     // 购入时间
-    time: { type: Date, default: Date.now },
+    date: { type: Date, default: Date.now },
     // 物品照片
     photo: [{ type: String }],
     // 价格
@@ -26,6 +26,8 @@ const schema = new mongoose.Schema({
     },
     // 联系方式
     tel: { type: String },
+    // 发布人
+    userId: { type: mongoose.SchemaTypes.ObjectId, ref: 'User' }
 }, {
     // 时间戳(会自动生成创建时间和更新时间)
     timestamps: true
