@@ -15,7 +15,8 @@ const schema = new mongoose.Schema({
         }
     },
     // 头像
-    avatar: { type: String, default: '/public/img/avatar-max-img.png' },
+    // avatar: { type: String, default: '/public/img/avatar-max-img.png' },
+    avatar: { type: String, default: 'http://localhost:3000/public/img/avatar-max-img.png' },
     // qq
     qq: { type: String },
     // Wechat

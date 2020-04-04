@@ -7,7 +7,8 @@ const schema = new mongoose.Schema({
     // 物品名称
     name: { type: String },
     // 物品类型
-    type: [{ type: String }],
+    // type: [{ type: String }],
+    type: [{ type: mongoose.SchemaTypes.ObjectId, ref: 'Category' }],
     // 物品描述
     description: { type: String },
     // 购入时间

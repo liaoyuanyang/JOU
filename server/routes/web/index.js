@@ -6,6 +6,8 @@ module.exports = app => {
     const jwt = require('jsonwebtoken') // 加密生成token的模块
     const assert = require('http-assert') // 判断状态的模块
     const User = require('../../models/User')
+    const Good = require('../../models/Good')
+    const Category = require('../../models/Category')
     const authMiddleware = require('../../middleware/auth') // 登录校验中间件
     const resourceMiddleware = require('../../middleware/resource') // 获取模型中间件
 
@@ -36,11 +38,8 @@ module.exports = app => {
     // 查找所有资源
     router.get('/', async(req, res) => {
         const queryOptions = {}
-        if (req.Model.modelName === 'Category') {
+        if (req.Model.modelName === 'category') {
             queryOptions.populate = 'parent'
-        }
-        if (req.Model.modelName === 'Good') {
-            queryOptions.populate = 'userId'
         }
         const model = await req.Model.find().setOptions(queryOptions)
         res.send(model)
@@ -107,5 +106,29 @@ module.exports = app => {
         res.status(err.statusCode || 500).send({
             message: err.message
         })
+    })
+
+    /**
+     * 查询所有二手物品
+     */
+    app.get('/web/api/goods', async(req, res) => {
+        const model = await Good.find().populate('userId')
+        res.send(model)
+    })
+
+    /**
+     * 根据物品ID查询某个二手物品详情
+     */
+    app.get('/web/api/goods/:id', async(req, res) => {
+        const model = await Good.findById(req.params.id).populate('type userId')
+        res.send(model)
+    })
+
+    /**
+     * 根据用户id查找用户
+     */
+    app.get('/web/api/user', authMiddleware(), async(req, res) => {
+        const model = await User.findById(req.user._id)
+        res.send(model)
     })
 }
