@@ -8,12 +8,13 @@ module.exports = app => {
     const User = require('../../models/User')
     const Good = require('../../models/Good')
     const Category = require('../../models/Category')
+    const Demand = require('../../models/Demand')
     const authMiddleware = require('../../middleware/auth') // 登录校验中间件
     const resourceMiddleware = require('../../middleware/resource') // 获取模型中间件
 
     // 添加资源
     router.post('/', authMiddleware(), async(req, res) => {
-        if (req.Model.modelName === 'Good') {
+        if (req.Model.modelName === 'Good' || 'Demand') {
             req.body.userId = req.user._id
                 // console.log(req.body)
         }
@@ -117,11 +118,31 @@ module.exports = app => {
     })
 
     /**
+     * 查询求购信息
+     */
+    app.get('/web/api/demands', async(req, res) => {
+        const model = await Demand.find().populate('userId')
+        res.send(model)
+    })
+
+    /**
      * 根据物品ID查询某个二手物品详情
      */
     app.get('/web/api/goods/:id', async(req, res) => {
         const model = await Good.findById(req.params.id).populate('type userId')
         res.send(model)
+    })
+
+    /**
+     * 根据用户ID查询二手物品详情
+     */
+    app.get('/web/api/goodsInfo/:id', async(req, res) => {
+        // console.log(req.params.id)
+        /* const model = await Good.find({
+            userId: req.params.id
+        })
+        res.send(model) */
+        res.send('ok')
     })
 
     /**
