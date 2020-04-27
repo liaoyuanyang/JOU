@@ -9,6 +9,7 @@ module.exports = app => {
     const Good = require('../../models/Good')
     const Category = require('../../models/Category')
     const Demand = require('../../models/Demand')
+    const Report = require('../../models/Report')
     const authMiddleware = require('../../middleware/auth') // 登录校验中间件
     const resourceMiddleware = require('../../middleware/resource') // 获取模型中间件
 
@@ -122,6 +123,14 @@ module.exports = app => {
      */
     app.get('/web/api/demands', async(req, res) => {
         const model = await Demand.find().populate('userId')
+        res.send(model)
+    })
+
+    /**
+     * 查询举报信息
+     */
+    app.get('/web/api/reports', async(req, res) => {
+        const model = await Report.find().populate('reportID')
         res.send(model)
     })
 

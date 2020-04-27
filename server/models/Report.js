@@ -9,6 +9,7 @@ const schema = new mongoose.Schema({
         type: mongoose.SchemaTypes.ObjectId,
         ref: 'User'
     },
+    /* reportID: { type: String }, */
     reportContent: { type: String }
 })
 

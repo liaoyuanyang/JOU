@@ -25,6 +25,7 @@ const schema = new mongoose.Schema({
         enum: [0, 1, 2], // 分别表示：宋跳校区、苍梧校区、通灌校区
         default: 0
     },
+    /* campus: { type: String }, */
     // 联系方式
     tel: { type: String },
     // 发布人
