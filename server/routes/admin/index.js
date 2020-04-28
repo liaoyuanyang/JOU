@@ -28,6 +28,12 @@ module.exports = app => {
         if (req.Model.modelName === 'Category') {
             queryOptions.populate = 'parent'
         }
+        if (req.Model.modelName === 'Good') {
+            queryOptions.populate = 'type userId'
+        }
+        if (req.Model.modelName === 'Report') {
+            queryOptions.populate = 'reportID'
+        }
         const model = await req.Model.find().setOptions(queryOptions)
         res.send(model)
     })
