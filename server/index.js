@@ -16,6 +16,9 @@ app.use(express.json()) // 允许处理post请求
 // 将 uploads 文件夹开放为静态资源
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
+app.use('/', express.static(path.join(__dirname, '/web')))
+app.use('/admin', express.static(path.join(__dirname, '/admin')))
+
 require('./plugins/db')(app) // 引入连接数据库的方法
 require('./routes/admin')(app) // 引入admin的路由方法
 require('./routes/web')(app) // 引入admin的路由方法
