@@ -43,13 +43,13 @@ module.exports = app => {
         if (req.Model.modelName === 'category') {
             queryOptions.populate = 'parent'
         }
-        const model = await req.Model.find().setOptions(queryOptions)
+        const model = await req.Model.find().setOptions(queryOptions).sort({ '_id': -1 })
         res.send(model)
     })
 
     // 根据id查找资源
     router.get('/:id', async(req, res) => {
-        const model = await req.Model.findById(req.params.id)
+        const model = await req.Model.findById(req.params.id).sort({ '_id': -1 })
         res.send(model)
     })
 
@@ -114,7 +114,7 @@ module.exports = app => {
      * 查询所有二手物品
      */
     app.get('/web/api/goods', async(req, res) => {
-        const model = await Good.find().populate('userId')
+        const model = await Good.find().populate('userId').sort({ '_id': -1 })
         res.send(model)
     })
 
@@ -122,7 +122,7 @@ module.exports = app => {
      * 查询求购信息
      */
     app.get('/web/api/demands', async(req, res) => {
-        const model = await Demand.find().populate('userId')
+        const model = await Demand.find().populate('userId').sort({ '_id': -1 })
         res.send(model)
     })
 
@@ -130,7 +130,7 @@ module.exports = app => {
      * 查询举报信息
      */
     app.get('/web/api/reports', async(req, res) => {
-        const model = await Report.find().populate('reportID')
+        const model = await Report.find().populate('reportID').sort({ '_id': -1 })
         res.send(model)
     })
 

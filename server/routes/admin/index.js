@@ -37,6 +37,9 @@ module.exports = app => {
         if (req.Model.modelName === 'Report') {
             queryOptions.populate = 'reportID'
         }
+        if (req.Model.modelName === 'Demand') {
+            queryOptions.populate = 'userId'
+        }
         const model = await req.Model.find().setOptions(queryOptions)
         res.send(model)
     })
